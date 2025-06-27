@@ -14,87 +14,107 @@
       overscroll-behavior: none;
       touch-action: manipulation;
       -webkit-font-smoothing: antialiased;
-      -webkit-user-select: none;
       user-select: none;
     }
 
-    .slide {
+    .slide, .text {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100dvh;
-      background-size: cover;
-      background-position: center;
       display: flex;
       justify-content: center;
       align-items: center;
       opacity: 0;
-      transition: opacity 1.8s ease;
-      padding: 1rem;
-      box-sizing: border-box;
+      transition: opacity 2s ease;
+      pointer-events: none;
     }
 
-    .text-overlay {
+    .slide {
+      background-size: cover;
+      background-position: center;
+      z-index: 1;
+    }
+
+    .text {
+      z-index: 2;
+      padding: 2rem;
       font-size: clamp(1.4rem, 4vw, 2.5rem);
       text-align: center;
       text-shadow: 0 0 10px rgba(0,0,0,0.6);
-      line-height: 1.4;
     }
 
-    .yellow {
-      color: #ffcc00;
-    }
+    .yellow { color: #ffcc00; }
+    .final { color: white; }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
+    #slide3 {
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
   </style>
 </head>
 <body>
 
-  <!-- Slide 1: Cinematic Opener -->
-  <div class="slide" id="slide1" style="background-image: url('drumstack.PNG');">
-    <div class="text-overlay">Where we store risk.</div>
-  </div>
+  <!-- Background slides -->
+  <div class="slide" id="slide1" style="background-image: url('drumstack.PNG');"></div>
+  <div class="slide" id="slide2" style="background-image: url('drumtop.PNG');"></div>
+  <div class="slide" id="slide3" style="background-image: url('sedwk28.001.jpeg');"></div>
 
-  <!-- Slide 2: Close-Up -->
-  <div class="slide" id="slide2" style="background-image: url('drumtop.PNG');">
-    <div class="text-overlay yellow">Not everything announces itself.</div>
-  </div>
-
-  <!-- Slide 3: Official Safety Slide -->
-  <div class="slide" id="slide3" style="background-image: url('sedwk28.001.jpeg');">
-    <div class="text-overlay">Weekly Safety Focus – Chemical Handling</div>
-  </div>
-
-  <!-- Slide 4: Final Statement -->
-  <div class="slide" id="slide4" style="background-color: black;">
-    <div class="text-overlay">The better we know our chemicals, the less they own us.</div>
-  </div>
+  <!-- Text overlays -->
+  <div class="text" id="text1">Where we store risk.</div>
+  <div class="text" id="text2">Not everything announces itself.</div>
+  <div class="text final" id="text3">The better we know our chemicals, the less they own us.</div>
 
   <script>
-    const slides = [
-      document.getElementById("slide1"),
-      document.getElementById("slide2"),
-      document.getElementById("slide3"),
-      document.getElementById("slide4"),
+    const sequence = [
+      // Slide 1 + Text 1
+      [() => fadeIn("slide1"), 0],
+      [() => fadeIn("text1"), 1000],
+      [() => fadeOut("slide1"), 4500],
+      [() => {}, 500], // pause
+      [() => fadeOut("text1"), 1000],
+
+      // Slide 2 + Text 2
+      [() => fadeIn("slide2"), 1000],
+      [() => fadeIn("text2"), 1000],
+      [() => fadeOut("slide2"), 4500],
+      [() => {}, 500], // pause
+      [() => fadeOut("text2"), 1000],
+
+      // Official SED Slide (no text)
+      [() => fadeIn("slide3"), 1000],
+      [() => {}, 10000],
+      [() => fadeOut("slide3"), 2000],
+
+      // Final Statement
+      [() => fadeIn("text3"), 500],
+      [() => {}, 4000],
+      [() => fadeOut("text3"), 2000],
     ];
 
-    let index = 0;
-    function showNextSlide() {
-      if (index > 0) {
-        slides[index - 1].style.opacity = 0;
-      }
-      if (index < slides.length) {
-        slides[index].style.opacity = 1;
-        index++;
-        setTimeout(showNextSlide, 4500);
-      }
+    function fadeIn(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.opacity = 1;
+    }
+
+    function fadeOut(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.opacity = 0;
+    }
+
+    let step = 0;
+    function runSequence() {
+      if (step >= sequence.length) return;
+      const [fn, delay] = sequence[step];
+      fn();
+      step++;
+      setTimeout(runSequence, delay);
     }
 
     window.onload = () => {
-      setTimeout(showNextSlide, 800);
+      setTimeout(runSequence, 500);
     };
   </script>
 
