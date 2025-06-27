@@ -2,41 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>SED W28 – Chemical Handling</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background-color: black;
       font-family: 'Space Mono', monospace;
       color: white;
-      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: manipulation;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      user-select: none;
     }
+
     .slide {
-      position: absolute;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100vw;
-      height: 100vh;
+      height: 100dvh;
       background-size: cover;
       background-position: center;
       display: flex;
       justify-content: center;
       align-items: center;
       opacity: 0;
-      transition: opacity 2s ease;
-      padding: 2rem;
+      transition: opacity 1.8s ease;
+      padding: 1rem;
       box-sizing: border-box;
     }
+
     .text-overlay {
-      font-size: 2.5em;
+      font-size: clamp(1.4rem, 4vw, 2.5rem);
       text-align: center;
-      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
+      line-height: 1.4;
     }
-    .red {
-      color: #ff5555;
-    }
+
     .yellow {
       color: #ffcc00;
     }
+
     @keyframes fadeIn {
       to { opacity: 1; }
     }
@@ -85,7 +94,7 @@
     }
 
     window.onload = () => {
-      setTimeout(showNextSlide, 1000);
+      setTimeout(showNextSlide, 800);
     };
   </script>
 
