@@ -15,6 +15,8 @@
       touch-action: manipulation;
       -webkit-font-smoothing: antialiased;
       user-select: none;
+      height: 100%;
+      width: 100%;
     }
 
     .slide, .text {
@@ -29,6 +31,9 @@
       opacity: 0;
       transition: opacity 2s ease;
       pointer-events: none;
+      text-align: center;
+      padding: 2rem;
+      box-sizing: border-box;
     }
 
     .slide {
@@ -37,22 +42,23 @@
       z-index: 1;
     }
 
-    .text {
-      z-index: 2;
-      padding: 2rem;
-      font-size: clamp(1.4rem, 4vw, 2.5rem);
-      text-align: center;
-      text-shadow: 0 0 10px rgba(0,0,0,0.6);
-    }
-
-    .yellow { color: #ffcc00; }
-    .final { color: white; }
-
     #slide3 {
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
     }
+
+    .text {
+      z-index: 2;
+      font-size: clamp(1.4rem, 4vw, 2.5rem);
+      line-height: 1.4;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .yellow { color: #ffcc00; }
+    .final { color: white; }
   </style>
 </head>
 <body>
@@ -64,36 +70,10 @@
 
   <!-- Text overlays -->
   <div class="text" id="text1">Where we store risk.</div>
-  <div class="text" id="text2">Not everything announces itself.</div>
+  <div class="text yellow" id="text2">Not everything announces itself.</div>
   <div class="text final" id="text3">The better we know our chemicals, the less they own us.</div>
 
   <script>
-    const sequence = [
-      // Slide 1 + Text 1
-      [() => fadeIn("slide1"), 0],
-      [() => fadeIn("text1"), 1000],
-      [() => fadeOut("slide1"), 4500],
-      [() => {}, 500], // pause
-      [() => fadeOut("text1"), 1000],
-
-      // Slide 2 + Text 2
-      [() => fadeIn("slide2"), 1000],
-      [() => fadeIn("text2"), 1000],
-      [() => fadeOut("slide2"), 4500],
-      [() => {}, 500], // pause
-      [() => fadeOut("text2"), 1000],
-
-      // Official SED Slide (no text)
-      [() => fadeIn("slide3"), 1000],
-      [() => {}, 10000],
-      [() => fadeOut("slide3"), 2000],
-
-      // Final Statement
-      [() => fadeIn("text3"), 500],
-      [() => {}, 4000],
-      [() => fadeOut("text3"), 2000],
-    ];
-
     function fadeIn(id) {
       const el = document.getElementById(id);
       if (el) el.style.opacity = 1;
@@ -103,6 +83,31 @@
       const el = document.getElementById(id);
       if (el) el.style.opacity = 0;
     }
+
+    const sequence = [
+      [() => {}, 2000], // Initial delay
+      [() => fadeIn("slide1"), 0],
+      [() => {}, 2000],
+      [() => fadeIn("text1"), 0],
+      [() => fadeOut("slide1"), 4500],
+      [() => {}, 2000],
+      [() => fadeOut("text1"), 0],
+      [() => {}, 1000],
+      [() => fadeIn("slide2"), 0],
+      [() => {}, 2000],
+      [() => fadeIn("text2"), 0],
+      [() => fadeOut("slide2"), 4500],
+      [() => {}, 2000],
+      [() => fadeOut("text2"), 0],
+      [() => {}, 1000],
+      [() => fadeIn("slide3"), 0],
+      [() => {}, 20000],
+      [() => fadeOut("slide3"), 0],
+      [() => {}, 1000],
+      [() => fadeIn("text3"), 0],
+      [() => {}, 5000],
+      [() => fadeOut("text3"), 0],
+    ];
 
     let step = 0;
     function runSequence() {
@@ -114,7 +119,7 @@
     }
 
     window.onload = () => {
-      setTimeout(runSequence, 500);
+      setTimeout(runSequence, 100);
     };
   </script>
 
