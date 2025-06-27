@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SED W28 – Chemical Handling</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      font-family: 'Space Mono', monospace;
+      color: white;
+      overflow: hidden;
+    }
+    .slide {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 2s ease;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+    .text-overlay {
+      font-size: 2.5em;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+    }
+    .red {
+      color: #ff5555;
+    }
+    .yellow {
+      color: #ffcc00;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slide 1: Cinematic Opener -->
+  <div class="slide" id="slide1" style="background-image: url('images/1.jpg');">
+    <div class="text-overlay">Where we store risk.</div>
+  </div>
+
+  <!-- Slide 2: Close-Up -->
+  <div class="slide" id="slide2" style="background-image: url('images/2.jpg');">
+    <div class="text-overlay yellow">Not everything announces itself.</div>
+  </div>
+
+  <!-- Slide 3: Safety PPT -->
+  <div class="slide" id="slide3" style="background-image: url('images/3.jpg');">
+    <div class="text-overlay">Weekly Safety Focus – Chemical Handling</div>
+  </div>
+
+  <!-- Slide 4: Final CTA -->
+  <div class="slide" id="slide4" style="background-color: black;">
+    <div class="text-overlay">The better we know our chemicals, the less they own us.</div>
+  </div>
+
+  <script>
+    const slides = [
+      document.getElementById("slide1"),
+      document.getElementById("slide2"),
+      document.getElementById("slide3"),
+      document.getElementById("slide4"),
+    ];
+
+    let index = 0;
+    function showNextSlide() {
+      if (index > 0) {
+        slides[index - 1].style.opacity = 0;
+      }
+      if (index < slides.length) {
+        slides[index].style.opacity = 1;
+        index++;
+        setTimeout(showNextSlide, 4500);
+      }
+    }
+
+    window.onload = () => {
+      setTimeout(showNextSlide, 1000);
+    };
+  </script>
+
+</body>
+</html>
