@@ -59,9 +59,66 @@
 
     .yellow { color: #ffcc00; }
     .final { color: white; }
+
+    /* Start screen */
+    #startScreen {
+      position: absolute;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1em;
+      flex-direction: column;
+      opacity: 0;
+      animation: fadeIn 5s ease-out forwards;
+    }
+
+    #startScreenText {
+      text-align: center;
+      line-height: 1.4em;
+    }
+
+    #startButton {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 11;
+      background: transparent;
+      border: none;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Audio -->
+  <audio id="chime1" src="C%20CHIME%20PAUL.wav"></audio>
+  <audio id="chime2" src="C%20CHIME%20STD%20.wav"></audio>
+
+  <!-- Start screen -->
+  <div id="startScreen">
+    <div id="startScreenText">
+      SYNCHRONISE<br>
+      <span style="font-style: italic; font-size: 0.4em;">Tap to begin</span>
+    </div>
+    <button id="startButton"></button>
+  </div>
 
   <!-- Background slides -->
   <div class="slide" id="slide1" style="background-image: url('drumstack.PNG');"></div>
@@ -74,6 +131,11 @@
   <div class="text final" id="text3">The better we know our chemicals, the less they own us.</div>
 
   <script>
+    const chime1 = document.getElementById("chime1");
+    const chime2 = document.getElementById("chime2");
+    const startScreen = document.getElementById("startScreen");
+    const startButton = document.getElementById("startButton");
+
     function fadeIn(id) {
       const el = document.getElementById(id);
       if (el) el.style.opacity = 1;
@@ -85,11 +147,11 @@
     }
 
     const sequence = [
-      [() => {}, 2000], // Initial delay
+      [() => {}, 2000],
       [() => fadeIn("slide1"), 0],
       [() => {}, 2000],
       [() => fadeIn("text1"), 0],
-      [() => {}, 6500], // extended image hold before fade out
+      [() => {}, 6500],
       [() => fadeOut("slide1"), 0],
       [() => {}, 2000],
       [() => fadeOut("text1"), 0],
@@ -97,7 +159,7 @@
       [() => fadeIn("slide2"), 0],
       [() => {}, 2000],
       [() => fadeIn("text2"), 0],
-      [() => {}, 6500], // extended image hold before fade out
+      [() => {}, 6500],
       [() => fadeOut("slide2"), 0],
       [() => {}, 2000],
       [() => fadeOut("text2"), 0],
@@ -120,9 +182,40 @@
       setTimeout(runSequence, delay);
     }
 
-    window.onload = () => {
-      setTimeout(runSequence, 100);
-    };
+    function fadeOutAudio(audio, duration = 5000) {
+      const steps = 50;
+      const stepTime = duration / steps;
+      const volumeStep = audio.volume / steps;
+      let currentStep = 0;
+      const fade = setInterval(() => {
+        if (currentStep < steps) {
+          audio.volume = Math.max(0, audio.volume - volumeStep);
+          currentStep++;
+        } else {
+          clearInterval(fade);
+          audio.pause();
+        }
+      }, stepTime);
+    }
+
+    startButton.addEventListener("click", () => {
+      chime1.volume = 1;
+      chime2.volume = 1;
+      chime1.play();
+      chime2.play();
+
+      startScreen.style.animation = "fadeOut 2s forwards";
+      setTimeout(() => {
+        startScreen.style.display = "none";
+      }, 2000);
+
+      setTimeout(() => {
+        fadeOutAudio(chime1, 5000);
+        fadeOutAudio(chime2, 5000);
+      }, 25000);
+
+      setTimeout(runSequence, 1000);
+    });
   </script>
 
 </body>
